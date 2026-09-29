@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orderly - Welcome</title>
+  <style>
+    :root {
+      --primary: #6A3BFA;
+      --dark: #4B21D6;
+      --light: #A78BFA;
+      --accent: #F3E8FF;
+      --bg: #FAF7FF;
+      --text: #2E1065;
+      --muted: #6B7280;
+      --soft-purple: #E9D5FF;
+      --success: #10B981;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .glow-sphere {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(90px);
+      z-index: 0;
+      animation: float 8s ease-in-out infinite alternate;
+    }
+
+    .glow-sphere-1 {
+      width: 400px;
+      height: 400px;
+      background: rgba(167, 139, 250, 0.4);
+      top: 5%;
+      left: 10%;
+    }
+
+    .glow-sphere-2 {
+      width: 450px;
+      height: 450px;
+      background: rgba(106, 59, 250, 0.25);
+      bottom: 5%;
+      right: 10%;
+      animation-delay: -4s;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px) scale(1); }
+      100% { transform: translateY(-30px) scale(1.08); }
+    }
+
+    .bg-logo-watermark {
+      position: absolute;
+      width: 500px;
+      height: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-10deg);
+      opacity: 0.08;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .card {
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 32px 28px;
+      border-radius: 24px;
+      width: 320px;
+      box-shadow: 0 12px 32px rgba(106, 59, 250, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .logo-container {
+      margin-bottom: 4px;
+    }
+
+    .logo-img {
+      width: 70px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    h2 { 
+      color: var(--text); 
+      margin: 4px 0 16px 0;
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    /* Toggle Navigation (Login vs Sign Up) */
+    .tab-container {
+      display: flex;
+      background: var(--accent);
+      border-radius: 12px;
+      padding: 4px;
+      margin-bottom: 18px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 8px 0;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+      margin-top: 0;
+    }
+
+    .tab-btn.active {
+      background: #FFFFFF;
+      color: var(--primary);
+      box-shadow: 0 2px 8px rgba(106, 59, 250, 0.15);
+    }
+
+    /* Form Inputs */
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    input { 
+      width: 100%;
+      padding: 12px;
+      box-sizing: border-box;
+      border-radius: 12px;
+      font-size: 14px;
+      border: 1px solid rgba(167, 139, 250, 0.5); 
+      background: rgba(243, 232, 255, 0.5); 
+      outline: none;
+      transition: all 0.2s ease;
+      color: var(--text);
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      background: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(106, 59, 250, 0.15);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 14px;
+      background: linear-gradient(90deg, var(--primary), var(--light));
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 8px;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .submit-btn:hover { 
+      opacity: 0.95; 
+      transform: translateY(-1px);
+    }
+
+    /* Congratulations Slide Styling */
+    .success-slide {
+      padding: 20px 10px;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .success-icon {
+      width: 60px;
+      height: 60px;
+      background: #D1FAE5;
+      color: var(--success);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 16px auto;
+    }
+
+    .success-slide h3 {
+      font-size: 18px;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .success-slide p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="glow-sphere glow-sphere-1"></div>
+  <div class="glow-sphere glow-sphere-2"></div>
+
+  <!-- Watermark Background Image -->
+  <img src="C:/Users/Shreya/OneDrive/Desktop/logo.png" alt="Orderly Watermark" class="bg-logo-watermark">
+
+  <div class="card">
+    <div class="logo-container">
+      <img src="C:/Users/Shreya/OneDrive/Desktop/logo.png" alt="Orderly Logo" class="logo-img">
+    </div>
+
+    <h2>Orderly</h2>
+
+    <!-- Toggle Buttons -->
+    <div class="tab-container" id="tabContainer">
+      <button class="tab-btn active" id="loginTab" onclick="switchTab('login')">Login</button>
+      <button class="tab-btn" id="signupTab" onclick="switchTab('signup')">Sign Up</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="loginForm">
+      <input id="loginUsn" type="text" placeholder="Enter USN" maxlength="10" required>
+      <input id="loginPass" type="password" placeholder="Password" required>
+      <button type="submit" class="submit-btn">Login</button>
+    </form>
+
+    <!-- Sign Up Form (Hidden by default) -->
+    <form id="signupForm" class="hidden">
+      <input id="signupName" type="text" placeholder="Full Name" required>
+      <input id="signupUsn" type="text" placeholder="USN (10 characters)" maxlength="10" required>
+      <input id="signupEmail" type="email" placeholder="College Email" required>
+      <input id="signupPass" type="password" placeholder="Create Password" required>
+      <button type="submit" class="submit-btn">Create Account</button>
+    </form>
+
+    <!-- Congratulations Slide (Hidden by default) -->
+    <div id="successSlide" class="success-slide hidden">
+      <div class="success-icon">✓</div>
+      <h3>Congratulations! 🎉</h3>
+      <p>Your account has been created successfully.</p>
+      <p style="font-size: 12px; color: var(--primary); font-weight: bold;">Redirecting to login...</p>
+    </div>
+  </div>
+
+  <script>
+    // Tab Switching Logic
+    function switchTab(tab) {
+      const loginTab = document.getElementById('loginTab');
+      const signupTab = document.getElementById('signupTab');
+      const loginForm = document.getElementById('loginForm');
+      const signupForm = document.getElementById('signupForm');
+      const successSlide = document.getElementById('successSlide');
+      const tabContainer = document.getElementById('tabContainer');
+
+      tabContainer.classList.remove('hidden');
+      successSlide.classList.add('hidden');
+
+      if (tab === 'signup') {
+        signupTab.classList.add('active');
+        loginTab.classList.remove('active');
+        signupForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+      } else {
+        loginTab.classList.add('active');
+        signupTab.classList.remove('active');
+        loginForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+      }
+    }
+
+    // 1. Sign Up Handler: Saves credentials into local storage
+    document.getElementById('signupForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const name = document.getElementById('signupName').value.trim();
+      const usn = document.getElementById('signupUsn').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const pass = document.getElementById('signupPass').value;
+
+      if (usn.length !== 10) {
+        alert("USN must be exactly 10 characters long.");
+        return;
+      }
+
+      // Save user details to browser's localStorage
+      const user = { name: name, usn: usn, email: email, pass: pass };
+      localStorage.setItem(usn, JSON.stringify(user));
+
+      // Show Congratulations Slide
+      document.getElementById('signupForm').classList.add('hidden');
+      document.getElementById('tabContainer').classList.add('hidden');
+      document.getElementById('successSlide').classList.remove('hidden');
+
+      // Pre-fill USN on login screen
+      document.getElementById('loginUsn').value = usn;
+
+      setTimeout(() => {
+        document.getElementById('signupForm').reset();
+        switchTab('login');
+      }, 2500);
+    });
+
+    // 2. Login Handler: Checks if password matches
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault();
+      const usnInput = document.getElementById('loginUsn').value.trim();
+      const passInput = document.getElementById('loginPass').value;
+
+      if (usnInput.length !== 10) {
+        alert("USN must be exactly 10 characters long.");
+        return;
+      }
+
+      // Retrieve user details from localStorage
+      const storedUserData = localStorage.getItem(usnInput);
+
+      if (!storedUserData) {
+        alert("Account not found for this USN. Please Sign Up first!");
+        return;
+      }
+
+      const user = JSON.parse(storedUserData);
+
+      // Verify Password
+      if (user.pass === passInput) {
+        // Store active session name for home.html
+        localStorage.setItem("currentUser", user.name);
+        window.location.href = "home.html";
+      } else {
+        alert("Incorrect Password! Please try again.");
+      }
+    });
+  </script>
+</body>
+</html>

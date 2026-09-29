@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orderly - Campus Food & Pickup</title>
+  <style>
+    :root {
+      --primary: #6A3BFA;
+      --dark: #4B21D6;
+      --light: #A78BFA;
+      --accent: #F3E8FF;
+      --bg: #FAF7FF;
+      --text: #2E1065;
+      --muted: #6B7280;
+      --card-bg: #FFFFFF;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Logo Watermark Background */
+    .bg-logo-watermark {
+      position: fixed;
+      width: 650px;
+      height: auto;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-10deg);
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Navigation Bar */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--accent);
+      box-shadow: 0 4px 20px rgba(106, 59, 250, 0.08);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      cursor: pointer;
+    }
+
+    .brand img {
+      width: 42px;
+      height: auto;
+    }
+
+    .brand h1 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    /* Search Bar */
+    .search-container {
+      flex: 1;
+      max-width: 480px;
+      margin: 0 24px;
+      position: relative;
+    }
+
+    .search-container input {
+      width: 100%;
+      padding: 10px 16px 10px 40px;
+      border-radius: 20px;
+      border: 1px solid rgba(167, 139, 250, 0.4);
+      background: var(--accent);
+      outline: none;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary);
+    }
+
+    /* Header Actions */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .cart-btn {
+      background: linear-gradient(90deg, var(--primary), var(--light));
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(106, 59, 250, 0.2);
+    }
+
+    .cart-badge {
+      background: #FFFFFF;
+      color: var(--primary);
+      border-radius: 50%;
+      padding: 2px 7px;
+      font-size: 12px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 24px auto;
+      padding: 0 20px;
+    }
+
+    /* Pickup Banner */
+    .pickup-banner {
+      background: linear-gradient(135deg, #6A3BFA, #A78BFA);
+      color: white;
+      border-radius: 20px;
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      box-shadow: 0 8px 24px rgba(106, 59, 250, 0.15);
+    }
+
+    .banner-text h2 {
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .banner-text p {
+      opacity: 0.9;
+      font-size: 14px;
+    }
+
+    .badge-pickup {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 8px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      font-weight: bold;
+    }
+
+    /* Canteen Filter Chips */
+    .stalls-nav {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 24px;
+    }
+
+    .chip {
+      background: #FFFFFF;
+      border: 1px solid rgba(167, 139, 250, 0.3);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      color: var(--text);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .chip.active, .chip:hover {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* Food Grid */
+    .section-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+
+    .food-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .food-card {
+      background: var(--card-bg);
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 4px 16px rgba(106, 59, 250, 0.06);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s;
+    }
+
+    .food-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .food-img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .food-info h3 {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .food-stall {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .food-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+    }
+
+    .price {
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--dark);
+    }
+
+    .add-btn {
+      background: var(--accent);
+      color: var(--primary);
+      border: 1px solid var(--light);
+      padding: 6px 14px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .add-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    /* Cart Sidebar Drawer */
+    .cart-drawer {
+      position: fixed;
+      top: 0;
+      right: -380px;
+      width: 360px;
+      height: 100%;
+      background: #FFFFFF;
+      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+      z-index: 200;
+      transition: right 0.3s ease;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .cart-drawer.open {
+      right: 0;
+    }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--accent);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .close-cart {
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .cart-items {
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #F3F4F6;
+    }
+
+    .cart-footer {
+      border-top: 1px solid var(--accent);
+      padding-top: 16px;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--dark));
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Logo Watermark -->
+  <img src="C:/Users/Shreya/OneDrive/Desktop/logo.png" alt="Orderly Watermark" class="bg-logo-watermark">
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <img src="C:/Users/Shreya/OneDrive/Desktop/logo.png" alt="Orderly Logo">
+      <h1>Orderly</h1>
+    </div>
+
+    <div class="search-container">
+      <span class="search-icon">🔍</span>
+      <input type="text" placeholder="Search for rolls, kulfi, coffee, or canteens...">
+    </div>
+
+    <div class="header-actions">
+      <button class="cart-btn" onclick="toggleCart()">
+        🛒 Cart <span class="cart-badge" id="cartCount">0</span>
+      </button>
+      <div class="user-profile">
+        <span>👤 Student</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Pickup Status Banner -->
+    <div class="pickup-banner">
+      <div class="banner-text">
+        <h2>Skip the Canteen Queue! ⚡</h2>
+        <p>Pre-order your food and pick it up when ready.</p>
+      </div>
+      <div class="badge-pickup">
+        📍 Pickup Mode Active
+      </div>
+    </div>
+
+    <!-- Updated Campus Canteen Filters -->
+    <div class="stalls-nav">
+      <button class="chip active">All Items</button>
+      <button class="chip">Acacia</button>
+      <button class="chip">Rolls Up</button>
+      <button class="chip">Bombay Kulfi</button>
+      <button class="chip">Tasty Cafe</button>
+      <button class="chip">Juice Centre</button>
+    </div>
+
+    <!-- Menu Section -->
+    <h2 class="section-title">Popular Items Today</h2>
+    <div class="food-grid">
+
+      <!-- Item 1: Acacia -->
+      <div class="food-card">
+        <img src="C:\Users\Shreya\OneDrive\Desktop\burger.jpg" class="food-img" alt="Acacia Burger">
+        <div class="food-info">
+          <h3>Special Veg Burger</h3>
+          <p class="food-stall">Acacia</p>
+        </div>
+        <div class="food-bottom">
+          <span class="price">₹80</span>
+          <button class="add-btn" onclick="addToCart('Special Veg Burger', 80)">+ ADD</button>
+        </div>
+      </div>
+
+      <!-- Item 2: Rolls Up -->
+      <div class="food-card">
+        <img src="C:\Users\Shreya\OneDrive\Desktop\paneer-kathi-rolls-1-1-850x1133.jpg" class="food-img" alt="Paneer Roll">
+        <div class="food-info">
+          <h3>Paneer Kathi Roll</h3>
+          <p class="food-stall">Rolls Up</p>
+        </div>
+        <div class="food-bottom">
+          <span class="price">₹100</span>
+          <button class="add-btn" onclick="addToCart('Paneer Kathi Roll', 100)">+ ADD</button>
+        </div>
+      </div>
+
+      <!-- Item 3: Bombay Kulfi -->
+      <div class="food-card">
+        <img src="https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=400" class="food-img" alt="Malai Kulfi">
+        <div class="food-info">
+          <h3>Malai Kulfi </h3>
+          <p class="food-stall">Bombay Kulfi</p>
+        </div>
+        <div class="food-bottom">
+          <span class="price">₹50</span>
+          <button class="add-btn" onclick="addToCart('Malai Kulfi Stick', 50)">+ ADD</button>
+        </div>
+      </div>
+
+      <!-- Item 4: Tasty Cafe -->
+      <div class="food-card">
+        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400" class="food-img" alt="Cold Coffee">
+        <div class="food-info">
+          <h3>Cold Coffee</h3>
+          <p class="food-stall">Tasty Cafe</p>
+        </div>
+        <div class="food-bottom">
+          <span class="price">₹60</span>
+          <button class="add-btn" onclick="addToCart('Cold Coffee', 60)">+ ADD</button>
+        </div>
+      </div>
+
+      <!-- Item 5: Juice Centre -->
+      <div class="food-card">
+        <img src="https://images.unsplash.com/photo-1613478223719-2ab802602423?w=400" class="food-img" alt="Fresh Juice">
+        <div class="food-info">
+          <h3>Fresh Mango Juice</h3>
+          <p class="food-stall">Juice Centre</p>
+        </div>
+        <div class="food-bottom">
+          <span class="price">₹70</span>
+          <button class="add-btn" onclick="addToCart('Fresh Mango Juice', 70)">+ ADD</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Cart Drawer -->
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h2>Your Cart</h2>
+      <span class="close-cart" onclick="toggleCart()">✕</span>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <p style="color: var(--muted); text-align: center; margin-top: 40px;">Your cart is empty.</p>
+    </div>
+    <div class="cart-footer">
+      <div style="display: flex; justify-content: space-between; font-weight: bold;">
+        <span>Total:</span>
+        <span id="cartTotal">₹0</span>
+      </div>
+      <button class="checkout-btn" onclick="placeOrder()">Place Order for Pickup</button>
+    </div>
+  </div>
+
+  <script>
+    let cart = [];
+
+    function toggleCart() {
+      document.getElementById('cartDrawer').classList.toggle('open');
+    }
+
+    function addToCart(itemName, price) {
+      cart.push({ name: itemName, price: price });
+      updateCartUI();
+    }
+
+    function updateCartUI() {
+      const cartCount = document.getElementById('cartCount');
+      const cartItemsContainer = document.getElementById('cartItems');
+      const cartTotal = document.getElementById('cartTotal');
+
+      cartCount.innerText = cart.length;
+
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = `<p style="color: var(--muted); text-align: center; margin-top: 40px;">Your cart is empty.</p>`;
+        cartTotal.innerText = '₹0';
+        return;
+      }
+
+      let total = 0;
+      cartItemsContainer.innerHTML = '';
+      cart.forEach((item, index) => {
+        total += item.price;
+        cartItemsContainer.innerHTML += `
+          <div class="cart-item">
+            <div>
+              <strong>${item.name}</strong><br>
+              <small style="color: var(--muted)">₹${item.price}</small>
+            </div>
+            <button onclick="removeItem(${index})" style="background:none; border:none; color:red; cursor:pointer;">✕</button>
+          </div>
+        `;
+      });
+
+      cartTotal.innerText = `₹${total}`;
+    }
+
+    function removeItem(index) {
+      cart.splice(index, 1);
+      updateCartUI();
+    }
+
+    function placeOrder() {
+      if (cart.length === 0) {
+        alert("Please add items to your cart first!");
+        return;
+      }
+      alert("Order placed successfully! Token #42 generated. Pickup in 15 mins.");
+      cart = [];
+      updateCartUI();
+      toggleCart();
+    }
+  </script>
+</body>
+</html>
